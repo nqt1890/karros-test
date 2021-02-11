@@ -9,5 +9,5 @@ import com.example.demo.domain.Trackpoint;
 
 @Repository
 public interface TrackpointRepository extends CrudRepository<Trackpoint, Long> {
-	List<Trackpoint> findAllByTrackIdOrderByTimeDesc(long trackId, Pageable pageable);
+	public List<Trackpoint> findAllByTrackIdOrderByTimeDesc(long trackId, Pageable pageable);
 }

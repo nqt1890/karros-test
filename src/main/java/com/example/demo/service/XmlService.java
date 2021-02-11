@@ -30,7 +30,6 @@ public class XmlService {
 			sb.append(line);
 		}
 		br.close();
-		System.out.println(sb.toString());
 		return sb.toString();
 	}
 }

@@ -14,10 +14,7 @@ import com.example.demo.domain.GPS;
 import com.example.demo.domain.Track;
 import com.example.demo.domain.Trackpoint;
 import com.example.demo.repository.GPSRepository;
-import com.example.demo.repository.MetadataRepository;
-import com.example.demo.repository.TrackRepository;
 import com.example.demo.repository.TrackpointRepository;
-import com.example.demo.repository.WaypointRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -29,15 +26,6 @@ public class DataController {
 	
 	@Autowired
 	TrackpointRepository trackpointRepo;
-
-	@Autowired
-	TrackRepository trackRepo;
-
-	@Autowired
-	WaypointRepository waypointRepo;
-
-	@Autowired
-	MetadataRepository metadataRepo;
 
 	@GetMapping("/user/{id}/lastesttrack")
 	public String lastestTracks(@PathVariable int id, @RequestParam int page) throws JsonProcessingException {
@@ -53,7 +41,7 @@ public class DataController {
 	}
 
 	@GetMapping("/user/{id}/detail")
-	public String one(@PathVariable int id) throws JsonProcessingException {
+	public String detail(@PathVariable int id) throws JsonProcessingException {
 		GPS gps = gpsRepo.findByUserId(id);
 		String json = "";
 		if (gps != null) {

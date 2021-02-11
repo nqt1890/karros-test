@@ -7,5 +7,5 @@ import com.example.demo.domain.GPS;
 
 @Repository
 public interface GPSRepository extends CrudRepository<GPS, Long> {
-	GPS findByUserId(long userId);
+	public GPS findByUserId(long userId);
 }
