@@ -7,5 +7,5 @@ import com.example.demo.domain.Metadata;
 
 @Repository
 public interface MetadataRepository extends CrudRepository<Metadata, Long> {
-	Metadata findByUserId(int userId);
+	Metadata findByGpsId(long gpsId);
 }

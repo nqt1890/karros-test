@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.GPS;
-import com.example.demo.domain.Metadata;
 import com.example.demo.domain.Track;
 import com.example.demo.domain.Trackpoint;
-import com.example.demo.domain.Waypoint;
+import com.example.demo.repository.GPSRepository;
 import com.example.demo.repository.MetadataRepository;
 import com.example.demo.repository.TrackRepository;
 import com.example.demo.repository.TrackpointRepository;
@@ -25,6 +24,9 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 
 @RestController
 public class DataController {
+	@Autowired
+	GPSRepository gpsRepo;
+	
 	@Autowired
 	TrackpointRepository trackpointRepo;
 
@@ -39,9 +41,10 @@ public class DataController {
 
 	@GetMapping("/user/{id}/lastesttrack")
 	public String lastestTracks(@PathVariable int id, @RequestParam int page) throws JsonProcessingException {
+		GPS gps = gpsRepo.findByUserId(id);
 		Pageable pageable = PageRequest.of(page, 10);
 
-		Track tr = trackRepo.findByUserId(id);
+		Track tr = gps.getTrk();
 		List<Trackpoint> rs = trackpointRepo.findAllByTrackIdOrderByTimeDesc(tr.getId(), pageable);
 
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -51,17 +54,12 @@ public class DataController {
 
 	@GetMapping("/user/{id}/detail")
 	public String one(@PathVariable int id) throws JsonProcessingException {
-		GPS gps = new GPS();
-		Track tr = trackRepo.findByUserId(id);
-		Metadata me = metadataRepo.findByUserId(id);
-		List<Waypoint> wps = waypointRepo.findByUserId(id);
-
-		gps.setMetadata(me);
-		gps.setTrk(tr);
-		gps.setWpt(wps);
-
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		String json = ow.writeValueAsString(gps);
+		GPS gps = gpsRepo.findByUserId(id);
+		String json = "";
+		if (gps != null) {
+			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+			json = ow.writeValueAsString(gps);
+		}
 		return json;
 	}
 

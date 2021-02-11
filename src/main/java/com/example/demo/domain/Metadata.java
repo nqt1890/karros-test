@@ -8,24 +8,30 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Metadata {
 	private @Id @GeneratedValue Long id;
 
-	String name;
-	int userId;
+	private String name;
 
 	@Lob
 	@Column(length = 10000)
-	String desc;
-	String author;
-	Date time;
+	private String desc;
+	private String author;
+	private Date time;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "gps_id", referencedColumnName = "id")
+	private GPS gps;
 
 	@OneToOne(targetEntity = Link.class, mappedBy = "metadata", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	Link link;
+	private Link link;
 
 	public Metadata() {
 	}
@@ -87,12 +93,13 @@ public class Metadata {
 		this.id = id;
 	}
 
-	public int getUserId() {
-		return userId;
+	@JsonIgnore
+	public GPS getGps() {
+		return gps;
 	}
 
-	public void setUser_id(int userId) {
-		this.userId = userId;
+	public void setGps(GPS gps) {
+		this.gps = gps;
 	}
 
 }

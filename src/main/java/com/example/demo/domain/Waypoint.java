@@ -3,8 +3,12 @@ package com.example.demo.domain;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Waypoint {
@@ -22,7 +26,9 @@ public class Waypoint {
 	@XmlElement
 	String sym;
 
-	int userId;
+	@ManyToOne
+	@JoinColumn(name = "gps_id")
+	GPS gps;
 
 	public Waypoint() {
 	}
@@ -74,13 +80,13 @@ public class Waypoint {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public int getUserId() {
-		return userId;
+	
+	@JsonIgnore
+	public GPS getGps() {
+		return gps;
 	}
 
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setGps(GPS gps) {
+		this.gps = gps;
 	}
-
 }

@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +19,7 @@ import com.example.demo.domain.Metadata;
 import com.example.demo.domain.Track;
 import com.example.demo.domain.Trackpoint;
 import com.example.demo.domain.Waypoint;
+import com.example.demo.repository.GPSRepository;
 import com.example.demo.repository.MetadataRepository;
 import com.example.demo.repository.TrackRepository;
 import com.example.demo.repository.WaypointRepository;
@@ -30,6 +30,9 @@ public class UploadController {
 	@Autowired
 	XmlService xmlService;
 
+	@Autowired
+	GPSRepository gpsRepo;
+	
 	@Autowired
 	MetadataRepository metadataRepo;
 
@@ -52,28 +55,25 @@ public class UploadController {
 
 		String str = xmlService.xmlFileToString(initialStream);
 		GPS gps = xmlService.deserializeFromXmlString(str);
-		System.out.println(gps);
-
+		gps.setUserId(userId);
+		
 		Metadata me = gps.getMetadata();
-		me.setUser_id(userId);
+		me.setGps(gps);
 		Link link = me.getLink();
 		link.setMetadata(me);
-		me = metadataRepo.save(me);
-
+		
 		Track tr = gps.getTrk();
-		tr.setUserId(userId);
+		tr.setGps(gps);
 		for (Trackpoint tp : tr.getTrkpt()) {
 			tp.setTrack(tr);
 		}
-		tr = trackRepo.save(gps.getTrk());
 
 		List<Waypoint> wps = gps.getWpt();
-		wps.stream().map(obj -> {
-			obj.setUserId(userId);
-			return obj;
-		}).collect(Collectors.toList());
-		waypointRepo.saveAll(wps);
+		for (Waypoint wp : wps) {
+			wp.setGps(gps);
+		}
 
+		gps = gpsRepo.save(gps);
 		return new RedirectView("upload");
 	}
 }

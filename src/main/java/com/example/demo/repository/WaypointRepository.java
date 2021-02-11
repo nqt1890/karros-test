@@ -8,5 +8,5 @@ import com.example.demo.domain.Waypoint;
 
 @Repository
 public interface WaypointRepository extends CrudRepository<Waypoint, Long> {
-	List<Waypoint> findByUserId(int userId);
+	List<Waypoint> findByGpsId(long gpsId);
 }

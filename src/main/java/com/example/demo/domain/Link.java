@@ -16,14 +16,14 @@ public class Link {
 	private @Id @GeneratedValue Long id;
 
 	@XmlAttribute
-	String href;
+	private String href;
 
 	@XmlElement
-	String text;
+	private String text;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "metadata_id", referencedColumnName = "id")
-	Metadata metadata;
+	private Metadata metadata;
 
 	public Link() {
 	}

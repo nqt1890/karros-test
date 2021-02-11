@@ -3,9 +3,9 @@ package com.example.demo.repository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.domain.Track;
+import com.example.demo.domain.GPS;
 
 @Repository
-public interface TrackRepository extends CrudRepository<Track, Long> {
-	Track findByGpsId(long gpsId);
+public interface GPSRepository extends CrudRepository<GPS, Long> {
+	GPS findByUserId(long userId);
 }
